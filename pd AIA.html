@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="th"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ฐานข้อมูลผลิตภัณฑ์ AIA</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&display=swap">
+<style>
+:root{--bg:#e4e8ef;--tx:#2b3345;--mu:#6b7488;--ac:#d31145;--sh1:#fff;--sh2:#b8bfcc;--box-sizing:border-box;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#2a2f3a;--tx:#e8ebf2;--mu:#9aa3b5;--ac:#ff5a82;--sh1:#343a47;--sh2:#1e2229}}
+:root[data-theme=dark]{--bg:#2a2f3a;--tx:#e8ebf2;--mu:#9aa3b5;--ac:#ff5a82;--sh1:#343a47;--sh2:#1e2229}
+html{scroll-padding-top:84px}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.65 'IBM Plex Sans Thai','Noto Sans Thai',system-ui,sans-serif}
+.w{max-width:1100px;margin:0 auto;padding:0 16px 60px}
+.out{background:var(--bg);box-shadow:7px 7px 14px var(--sh2),-7px -7px 14px var(--sh1);border-radius:20px}
+.in{background:var(--bg);box-shadow:inset 4px 4px 9px var(--sh2),inset -4px -4px 9px var(--sh1);border-radius:14px}
+header{padding:72px 0 12px}
+h1{font-size:clamp(26px,5vw,40px);margin:0 0 6px;line-height:1.25}
+h1 span{color:var(--ac)}
+.sub{color:var(--mu);margin:0}
+nav a,.chip{flex:none;padding:8px 16px;border-radius:12px;color:var(--tx);text-decoration:none;font-size:14px;border:0;font-family:inherit;cursor:pointer;background:var(--bg);box-shadow:4px 4px 8px var(--sh2),-4px -4px 8px var(--sh1)}
+.chip.on{box-shadow:inset 3px 3px 6px var(--sh2),inset -3px -3px 6px var(--sh1);color:var(--ac);font-weight:600}
+a:focus-visible,button:focus-visible,.chip:focus-visible,input:focus-visible,summary:focus-visible{outline:2px solid var(--ac);outline-offset:2px}
+section{margin-top:36px}
+h2{font-size:24px;margin:0 0 4px}
+.note{background:var(--bg);padding:14px 18px;margin:14px 0;font-size:14px;color:var(--mu)}
+.tools{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0}
+input[type=search]{flex:1;min-width:200px;padding:11px 16px;border:0;color:var(--tx);font:inherit;border-radius:12px;background:var(--bg);box-shadow:inset 3px 3px 7px var(--sh2),inset -3px -3px 7px var(--sh1)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(310px,1fr));gap:22px;margin-top:10px}
+.card{padding:18px}
+.card h3{margin:0 0 8px;font-size:17px;line-height:1.4}
+.tag{display:inline-block;font-size:12px;padding:2px 10px;border-radius:10px;color:var(--ac);margin-bottom:8px;font-weight:600;box-shadow:inset 2px 2px 4px var(--sh2),inset -2px -2px 4px var(--sh1)}
+.kv{font-size:14px;margin:6px 0}.kv b{color:var(--mu);font-weight:600}
+.ben{font-size:14.5px;padding:10px 12px;margin:10px 0}
+details{font-size:14px;color:var(--mu)}summary{cursor:pointer;color:var(--tx);font-weight:600;padding:4px 0}
+.ref{font-size:12px;color:var(--mu);margin-top:8px}
+.tw{overflow-x:auto;padding:6px}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:760px}
+th,td{text-align:left;padding:10px 12px;vertical-align:top}
+th{color:var(--ac);font-weight:700;white-space:nowrap}
+tr+tr td{border-top:1px solid color-mix(in srgb,var(--mu) 25%,transparent)}
+.pts{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:20px;margin-top:10px}
+.pts .card p{margin:4px 0;font-size:14.5px}
+.empty{color:var(--mu);padding:20px;text-align:center}
+footer{margin-top:40px;font-size:13px;color:var(--mu)}
+
+#tb{position:fixed;top:0;left:0;right:0;z-index:30;height:calc(64px + env(safe-area-inset-top,0px));padding:env(safe-area-inset-top,0px) 14px 0;background:var(--bg);box-shadow:0 4px 12px var(--sh2);display:flex;align-items:center;gap:12px;font-weight:700}
+#mb{flex:none;width:44px;height:44px;border:0;border-radius:14px;color:var(--tx);font-size:22px;cursor:pointer;background:var(--bg);box-shadow:4px 4px 8px var(--sh2),-4px -4px 8px var(--sh1)}
+#ov{position:fixed;inset:0;z-index:40;background:rgba(0,0,0,.35);opacity:0;pointer-events:none;transition:opacity .25s}
+#dr{position:fixed;top:0;left:0;bottom:0;width:270px;max-width:82vw;z-index:50;background:var(--bg);padding:calc(20px + env(safe-area-inset-top,0px)) 18px 20px;transform:translateX(-105%);transition:transform .28s;box-shadow:8px 0 20px var(--sh2);display:flex;flex-direction:column;gap:12px;overflow-y:auto}
+body.op #dr{transform:none}body.op #ov{opacity:1;pointer-events:auto}
+#dr h4{margin:0 0 4px;font-size:16px}
+#dr a{display:block;padding:12px 16px;border-radius:12px;color:var(--tx);text-decoration:none;font-size:15px;box-shadow:4px 4px 8px var(--sh2),-4px -4px 8px var(--sh1)}
+#dr a:active,#dr a.cur{box-shadow:inset 3px 3px 6px var(--sh2),inset -3px -3px 6px var(--sh1);color:var(--ac);font-weight:600}
+#dr .bd{background:var(--ac);color:var(--bg);border-radius:10px;padding:0 8px;font-size:12px;margin-left:6px}
+#dr .chip{text-align:left;font-size:15px;padding:11px 16px}
+.pick{display:flex;align-items:center;gap:8px;font-size:14px;margin-top:10px;cursor:pointer}
+.pick input{width:18px;height:18px;accent-color:var(--ac)}
+#bar{position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom,0px));transform:translate(-50%,160%);z-index:20;padding:10px 14px 10px 20px;display:flex;gap:12px;align-items:center;transition:transform .25s;font-size:14px}
+#bar.show{transform:translate(-50%,0)}
+.btn{border:0;border-radius:12px;padding:9px 16px;font:inherit;font-size:14px;cursor:pointer;color:var(--bg);background:var(--ac)}
+.btn.g{color:var(--tx);background:var(--bg);box-shadow:3px 3px 6px var(--sh2),-3px -3px 6px var(--sh1)}
+.cmp h3{margin:22px 0 8px;font-size:18px}
+.cmp td:first-child,.cmp th:first-child{position:sticky;left:0;background:var(--bg);white-space:nowrap;font-weight:600;color:var(--mu)}
+.cmp tr.df td:first-child{color:var(--ac)}
+.cmp tr.df td+td{background:color-mix(in srgb,var(--ac) 8%,transparent)}
+.cmp table{min-width:640px}
+#thm .chip{font-size:14px;padding:8px 12px;display:inline-flex;align-items:center;gap:6px}
+.dot{width:12px;height:12px;border-radius:50%;display:inline-block;flex:none}
+html[data-st=glass] body{background:radial-gradient(circle at 15% 10%,color-mix(in srgb,var(--ac) 38%,var(--bg)),transparent 55%),radial-gradient(circle at 85% 80%,color-mix(in srgb,var(--ac) 22%,var(--bg)),transparent 55%),var(--bg);background-attachment:fixed}
+html[data-st=glass] .out,html[data-st=glass] .in,html[data-st=glass] .chip,html[data-st=glass] #dr a,html[data-st=glass] input[type=search],html[data-st=glass] .tag,html[data-st=glass] .btn.g,html[data-st=glass] #mb{background:color-mix(in srgb,var(--tx) 8%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid color-mix(in srgb,var(--tx) 18%,transparent);box-shadow:0 8px 24px rgba(0,0,0,.14)}
+html[data-st=glass] #tb,html[data-st=glass] #dr{background:color-mix(in srgb,var(--bg) 78%,transparent);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px)}
+html[data-st=glass] .chip.on,html[data-st=glass] #dr a.cur{border-color:var(--ac)}
+html[data-st=brut] .out,html[data-st=brut] .chip,html[data-st=brut] #dr a,html[data-st=brut] input[type=search],html[data-st=brut] .tag,html[data-st=brut] #mb,html[data-st=brut] .btn{border:2px solid var(--tx);border-radius:8px;box-shadow:4px 4px 0 var(--tx)}
+html[data-st=brut] .in{border:2px solid var(--tx);border-radius:8px;box-shadow:none}
+html[data-st=brut] .chip.on,html[data-st=brut] #dr a.cur{background:var(--ac);color:var(--bg);box-shadow:none}
+html[data-st=brut] #tb{box-shadow:none;border-bottom:3px solid var(--tx)}
+html[data-st=brut] #dr{box-shadow:none;border-right:3px solid var(--tx)}
+#dm{margin-left:auto;flex:none;width:44px;height:44px;border:0;border-radius:50%;font-size:20px;cursor:pointer;color:var(--tx);background:none}
+html[data-st=glass] body{background:radial-gradient(40vmax 40vmax at 8% 6%,var(--g1),transparent 62%),radial-gradient(38vmax 38vmax at 92% 22%,var(--g2),transparent 62%),radial-gradient(46vmax 46vmax at 68% 96%,var(--g3),transparent 62%),var(--bg);background-attachment:fixed}
+html[data-st=glass] .out,html[data-st=glass] .chip,html[data-st=glass] #dr a,html[data-st=glass] input[type=search],html[data-st=glass] .tag,html[data-st=glass] .btn.g,html[data-st=glass] #mb,html[data-st=glass] #dm{background:linear-gradient(135deg,var(--gl1),var(--gl2));border:1px solid var(--gb);box-shadow:inset 0 1px 0 var(--gi),inset 0 -1px 0 var(--gb),0 12px 32px var(--gs);backdrop-filter:blur(22px) saturate(180%);-webkit-backdrop-filter:blur(22px) saturate(180%)}
+html[data-st=glass] .in{background:var(--gl2);border:1px solid var(--gb);box-shadow:inset 0 2px 8px var(--gs);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px)}
+html[data-st=glass] #tb,html[data-st=glass] #dr{background:var(--gl1);border:0;border-bottom:1px solid var(--gb);box-shadow:0 8px 30px var(--gs);backdrop-filter:blur(26px) saturate(180%);-webkit-backdrop-filter:blur(26px) saturate(180%)}
+html[data-st=glass] #dr{border-bottom:0;border-right:1px solid var(--gb)}
+html[data-st=glass] .chip.on,html[data-st=glass] #dr a.cur{background:color-mix(in srgb,var(--ac) 14%,transparent);border-color:var(--ac);color:var(--ac)}
+h1,h2{font-weight:600;letter-spacing:-.01em}.card h3{font-weight:600}
+html[data-st=glass] .out,html[data-st=glass] .chip,html[data-st=glass] #dr a,html[data-st=glass] input[type=search],html[data-st=glass] .tag,html[data-st=glass] .btn.g,html[data-st=glass] #mb,html[data-st=glass] #dm{border:0;box-shadow:inset 0 1px 0 var(--gi),0 0 0 1px var(--gh),0 10px 28px var(--gs)}
+html[data-st=glass] .in{border:0;box-shadow:inset 0 0 0 1px var(--gh),inset 0 2px 8px var(--gs)}
+html[data-st=glass] #tb{border:0;box-shadow:0 1px 0 var(--gh),0 10px 30px var(--gs)}
+html[data-st=glass] #dr{border:0;box-shadow:1px 0 0 var(--gh),10px 0 30px var(--gs)}
+html[data-st=glass] .chip.on,html[data-st=glass] #dr a.cur{box-shadow:inset 0 1px 0 var(--gi),0 0 0 1.5px var(--ac),0 8px 22px var(--gs)}
+.chip,.btn,#dr a,#mb,#dm{position:relative;overflow:hidden;transition:transform .35s cubic-bezier(.34,1.56,.64,1),filter .25s,color .25s,background .3s}
+.chip::after,.btn::after,#dr a::after{content:'';position:absolute;inset:0;background:linear-gradient(110deg,transparent 30%,rgba(255,255,255,.5) 50%,transparent 70%);transform:translateX(-130%);transition:transform .7s;pointer-events:none}
+@media(hover:hover){.chip:hover,.btn:hover,#dr a:hover,#mb:hover,#dm:hover{transform:translateY(-3px) scale(1.04);filter:brightness(1.06)}.chip:hover::after,.btn:hover::after,#dr a:hover::after{transform:translateX(130%)}.out.card{transition:transform .4s cubic-bezier(.34,1.56,.64,1)}.out.card:hover{transform:translateY(-4px)}}
+.chip:active,.btn:active,#dr a:active,#mb:active,#dm:active{transform:scale(.9)}
+.rp{position:absolute;border-radius:50%;background:currentColor;opacity:.28;transform:scale(0);animation:rp .65s ease-out forwards;pointer-events:none}
+@keyframes rp{to{transform:scale(1);opacity:0}}
+@keyframes pop{0%{transform:scale(1)}45%{transform:scale(1.14)}100%{transform:scale(1)}}
+@keyframes slin{from{opacity:0;transform:translateX(-24px) scale(.95)}to{opacity:1;transform:none}}
+@keyframes spin{0%{transform:rotate(0) scale(1)}50%{transform:rotate(200deg) scale(.55)}100%{transform:rotate(360deg) scale(1)}}
+.chip.on{animation:pop .4s}
+#dm.spin{animation:spin .6s cubic-bezier(.34,1.56,.64,1)}
+body.op #dr a,body.op #chips .chip{animation:slin .5s cubic-bezier(.34,1.56,.64,1) backwards}
+#mb{font-size:0}#mb i{position:absolute;left:12px;right:12px;height:2px;border-radius:2px;background:var(--tx);transition:transform .4s cubic-bezier(.34,1.56,.64,1),opacity .2s,top .3s}
+#mb i:nth-child(1){top:14px}#mb i:nth-child(2){top:21px}#mb i:nth-child(3){top:28px}
+body.op #mb i:nth-child(1){top:21px;transform:rotate(45deg)}body.op #mb i:nth-child(2){opacity:0;transform:scaleX(0)}body.op #mb i:nth-child(3){top:21px;transform:rotate(-45deg)}
+.pick input{appearance:none;-webkit-appearance:none;width:22px;height:22px;border-radius:7px;background:var(--gl2);box-shadow:0 0 0 1.5px var(--gh),inset 0 1px 0 var(--gi);cursor:pointer;transition:background .25s,box-shadow .25s}
+.pick input:checked{background:var(--ac) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M3 8.5l3.2 3L13 4.5' fill='none' stroke='white' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E") center/72% no-repeat;box-shadow:0 0 0 1.5px var(--ac);animation:pop .35s cubic-bezier(.34,1.56,.64,1)}
+#dr>*{flex:none}
+.pick:hover{color:var(--ac)}
+.dw{position:relative;flex:1;min-width:200px}.dw input{width:100%;padding-right:46px;cursor:pointer}
+#q::-webkit-search-cancel-button{-webkit-appearance:none}
+.cv{position:absolute;right:20px;top:50%;width:8px;height:8px;border-right:2px solid var(--tx);border-bottom:2px solid var(--tx);transform:translateY(-70%) rotate(45deg);transition:transform .35s cubic-bezier(.34,1.56,.64,1);pointer-events:none}
+.dw.open .cv{transform:translateY(-20%) rotate(225deg);border-color:var(--ac)}
+#dd{position:absolute;left:0;right:0;top:calc(100% + 8px);z-index:25;max-height:340px;overflow-y:auto;padding:8px;border-radius:16px;background:color-mix(in srgb,var(--bg) 90%,transparent);backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);box-shadow:0 0 0 1px var(--gh),0 18px 40px var(--gs);animation:ddin .28s cubic-bezier(.34,1.56,.64,1)}
+@keyframes ddin{from{opacity:0;transform:translateY(-8px) scale(.98)}}
+.di{display:block;width:100%;text-align:left;padding:10px 12px;border:0;border-radius:10px;background:none;color:var(--tx);font:inherit;font-size:14px;cursor:pointer;transition:background .15s,padding-left .2s}
+.di:hover,.di.hl{background:color-mix(in srgb,var(--ac) 12%,transparent);color:var(--ac);padding-left:18px}
+.dg{font-size:12px;font-weight:600;color:var(--red);padding:10px 12px 4px}
+html[data-st=glass] .tag{background:color-mix(in srgb,var(--ac) 14%,transparent);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--ac) 40%,transparent);backdrop-filter:none;-webkit-backdrop-filter:none;padding:3px 12px;font-weight:500}
+h1 span,h2,.pts h3,th,.cmp h3{color:var(--red)}
+body.op #tb{z-index:60;background:none;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none}
+body.op #tb span,body.op #dm{opacity:0;pointer-events:none}
+#tb span,#dm{transition:opacity .25s}
+html[data-st=glass] #dr{padding-top:calc(76px + env(safe-area-inset-top,0px))}
+#bar{transition:transform .5s cubic-bezier(.34,1.56,.64,1)}
+@media(prefers-reduced-motion:reduce){*,*::after{animation:none!important;transition:none!important}}
+</style></head><body><div class="w">
+<header><h1>ฐานข้อมูลผลิตภัณฑ์ <span>AIA</span></h1>
+<p class="sub">แบบประกันหลัก · สัญญาเพิ่มเติม · แผน PA · ข้อควรรู้</p></header>
+<div id="tb"><button id="mb" aria-label="เปิดเมนู" aria-expanded="false"><i></i><i></i><i></i></button><span>ฐานข้อมูลผลิตภัณฑ์ AIA</span><button id="dm" aria-label="เปลี่ยนเป็นโหมดมืด">🌙</button></div><div id="ov"></div>
+<aside id="dr" aria-label="เมนู"><h4>เมนู</h4>
+<a href="#main">แบบประกันหลัก</a><a href="#rider">สัญญาเพิ่มเติม</a><a href="#pa">แผน PA</a><a href="#cmp">เปรียบเทียบ<span class="bd" id="bd" hidden></span></a><a href="#exam">ข้อควรรู้</a><a href="#sale">สถานการณ์ลูกค้า</a><h4 style="margin-top:8px">กรองกลุ่มแบบประกันหลัก</h4><div id="chips" style="display:flex;flex-direction:column;gap:10px"></div><div id="thm" hidden></div></aside>
+<div class="note in">รอบนี้สรุปเฉพาะแบบที่เป็นตัวแทนแต่ละกลุ่ม ยังไม่ใช่คู่มือฉบับเต็มและไม่มีตารางเบี้ยรายอายุ (ยกเว้น PA) ใช้ศึกษาเท่านั้น ไม่แทนเอกสารเสนอขายและกรมธรรม์จริง รายการที่ติดป้าย "ตรวจซ้ำ" ควรเปิดต้นฉบับยืนยัน</div>
+
+<section id="main"><h2>แบบประกันหลัก</h2>
+<div class="tools"><div class="dw"><input type="search" id="q" placeholder="เลือกหรือค้นหาแบบประกัน" aria-label="เลือกแบบประกัน" autocomplete="off" role="combobox" aria-expanded="false"><i class="cv"></i><div id="dd" role="listbox" hidden></div></div><span id="gl" style="color:var(--ac);font-weight:600;align-self:center"></span></div>
+<div class="grid" id="mainGrid"></div></section>
+
+<section id="rider"><h2>สัญญาเพิ่มเติม (Riders)</h2>
+<div class="tools"><input type="search" id="qr" placeholder="ค้นหา rider เช่น Multi-Pay, มะเร็ง" aria-label="ค้นหา rider"></div>
+<div class="grid" id="riderGrid"></div></section>
+
+<section id="pa"><h2>แผนประกันอุบัติเหตุส่วนบุคคล (PA) 2026</h2>
+<div class="note in">ต่ออายุได้ถึง 75 ปี · รับประกันอาชีพขั้น 1 และ 2 · ขั้น 3 (เช่น คนขับรถบรรทุกหนัก ช่างไฟ คนงานก่อสร้าง) ใช้แผนเฉพาะ · SA 10 ล้านขึ้นไปต้องมีเอกสารเพิ่ม · เบี้ยคือช่วงอายุฐานของแต่ละแผน ปรับตามอายุขณะต่ออายุ</div>
+<div class="out tw"><table id="paT"></table></div>
+<p class="sub" style="font-size:13px;margin-top:10px">AD,DD เสียชีวิต/สูญเสียอวัยวะ/สายตา · PD ทุพพลภาพถาวร · MA ถูกฆาตกรรม/ทำร้าย · MC ขับขี่/โดยสารจักรยานยนต์ · ME ค่ารักษา · PH วันหยุดนักขัตฤกษ์ · BB กระดูกแตกหัก · HU ชดเชยรายได้ รพ. · FCG ค่าเลี้ยงดูครอบครัวรายเดือน 60 เดือน · PP รถยนต์ส่วนบุคคล · ND ภัยธรรมชาติ</p></section>
+
+<section id="cmp" class="cmp"><h2>เปรียบเทียบ</h2>
+<p class="sub">ติ๊ก "เทียบ" ที่การ์ดแบบประกันหรือ rider (เลือกได้ประเภทละ 4 รายการ) แถวที่ข้อมูลต่างกันจะไฮไลต์</p>
+<div id="cmpOut"></div></section>
+
+<section id="exam"><h2>ข้อควรรู้</h2><div class="pts">
+<div class="out card"><h3>ระยะรอคอย</h3><p>60 วัน: CI SuperCare, CI Plus, CI Top-up, Multi-Pay CI Plus, Care for Cancer</p><p>30 วัน: Health Cancer</p><p>Health Happy: 30 วันแรกไม่คุ้มครองการป่วย และบางโรค 120 วัน</p><p>HB Extra: มีทั้ง 30 และ 120 วัน</p></div>
+<div class="out card"><h3>Senior Happy</h3><p>เสียชีวิตจากการเจ็บป่วย 2 ปีแรก จ่าย 102% ของเบี้ยหลักที่ชำระ ไม่ใช่เต็ม SA</p><p>อุบัติเหตุจ่ายตาม SA</p><p>ข้อยกเว้นอุบัติเหตุ: ฆ่าตัวตาย ถูกฆ่า/ทำร้ายโดยเจตนา ติดเชื้อโรค (ยกเว้นติดจากบาดแผลอุบัติเหตุ)</p></div>
+<div class="out card"><h3>Par vs Non Par</h3><p>Lifetime Income 9/99 เป็น Par มีโอกาสได้เงินปันผลแต่ไม่รับรองการจ่าย</p><p>Non Par (Excellent, Saving Sure ฯลฯ) ผลประโยชน์ตามตารางที่กำหนดไว้</p></div>
+<div class="out card"><h3>ยูนิตลิงค์</h3><p>ผลตอบแทนไม่รับประกัน</p><p>โบนัสพิเศษยามเกษียณต้องผ่านเงื่อนไข: อายุครบ 55, กรมธรรม์มีผลอย่างน้อย 10 ปี, ชำระเบี้ยหลักครบ และไม่เคยหยุดพักชำระ</p></div>
+<div class="out card"><h3>ภาษี</h3><p>เบี้ยประกันชีวิตลดหย่อนสูงสุด 100,000 บาท</p><p>บำนาญ (Annuity FIX/Sure) ลดหย่อนสูงสุด 200,000 บาท</p><p>เบี้ยสุขภาพลดหย่อนตามเกณฑ์แยกต่างหาก</p></div>
+<div class="out card"><h3>WP และการแถลงข้อความจริง</h3><p>WP ยกเว้นเบี้ยหลักเมื่อทุพพลภาพสิ้นเชิงถาวรก่อนอายุ 60 (ต้องแนบ rider WP) · WPCI ยกเว้นเมื่อวินิจฉัยโรคร้ายแรง</p><p>ปกปิดหรือแถลงเท็จ บริษัทอาจบอกล้างสัญญาและปฏิเสธการจ่ายสินไหม</p></div></div></section>
+
+<section id="sale"><h2>สถานการณ์ลูกค้า</h2>
+<div class="out tw"><table><tr><th>ลูกค้า</th><th>แบบที่ควรเปิดดู</th><th>ประเด็นที่ควรอธิบายตรงๆ</th></tr>
+<tr><td>อยากออมสั้นๆ มีเงินคืน</td><td>5Pay10, Excellent, Endowment 15/25</td><td>เงินคืนไม่ใช่ดอกเบี้ย เป็นส่วนของผลประโยชน์ตามตาราง ถ้ายกเลิกก่อนครบอาจได้น้อยกว่าเบี้ยที่จ่าย</td></tr>
+<tr><td>วางแผนเกษียณ/รายได้ประจำ</td><td>Saving Sure, Protection 65, Lifetime Income 9/99, Annuity FIX/Sure</td><td>เงินคืนการันตีเริ่มที่อายุ 60/65 หรือปีที่ 2 ตามแบบ · บำนาญลดหย่อนสูงสุด 200,000 · Par ปันผลไม่รับรอง</td></tr>
+<tr><td>กลัวโรคร้ายแรง</td><td>CI SuperCare, CI ProCare, CI Plus / Multi-Pay CI (rider)</td><td>รอคอย 60 วัน · จำนวนครั้งและ % จ่ายต่างกันตามระดับโรค · ดูนิยามโรคในกรมธรรม์</td></tr>
+<tr><td>สูงวัย ไม่อยากตรวจสุขภาพ</td><td>Senior Happy</td><td>ปีแรกๆ เสียชีวิตจากป่วยจ่าย 102% ของเบี้ย ไม่ใช่เต็ม SA</td></tr>
+<tr><td>ค่ารักษาพยาบาล</td><td>Health Happy, Health Saver, Health Starter, InfiniteCare, HB Extra</td><td>ทุกตัวเป็นสัญญาเพิ่มเติมต้องมีแบบหลัก · เบี้ยปรับตามอายุ · มีระยะรอคอย</td></tr>
+<tr><td>ขับมอเตอร์ไซค์ประจำ</td><td>PA กลุ่มมอเตอร์ไซค์ (AIANPA2500/3000/3800)</td><td>ตรวจขั้นอาชีพก่อน · ขั้น 3 ใช้แผนเฉพาะ · ดูข้อยกเว้นในกรมธรรม์</td></tr>
+<tr><td>อยากลงทุนควบประกัน</td><td>Smart Select, 20 Pay Link, Issara Plus</td><td>อธิบายความเสี่ยงการลงทุน ค่าใช้จ่ายและการหักค่าประกันภัยจากกองทุน · อย่าเทียบกับเงินฝาก</td></tr>
+<tr><td>ครอบครัวทุนสูง/ส่งต่อมรดก</td><td>Legacy Prestige, Infinite Wealth Prestige</td><td>SA ขั้นต่ำสูง (เช่น 10-15 ล้านบาท) และเกณฑ์ตรวจสุขภาพเข้มกว่า</td></tr></table></div>
+<p class="sub" style="font-size:13px;margin-top:10px">ตารางนี้เรียบเรียงจากเนื้อหาในเอกสาร ไม่ใช่ข้อความจากเอกสารโดยตรง ตรวจกับหัวหน้า/คู่มือการขายของบริษัทก่อนใช้กับลูกค้า</p></section>
+<div id="bar" class="out"><span id="barT"></span><button class="btn" id="go">ดูเปรียบเทียบ</button><button class="btn g" id="clr">ล้าง</button></div>
+<footer>ใช้ศึกษาเท่านั้น ไม่แทนเอกสารเสนอขายและกรมธรรม์ฉบับจริง</footer>
+</div>
+<script>
+var D={"main": [["คุ้มครองชีวิต", "Term 5/10/15/20 (Benefits Plus 2019)", "ตามระยะสัญญา (ไม่ได้ยืนยันในไฟล์)", "5 / 10 / 15 / 20 ปี", "Term5 อายุ 20-59 | Term10 20-55 | Term15 20-50 | Term20 20-45", "SA ขั้นต่ำ 350,000 บาท", "เสียชีวิต 100% ของ SA (ไม่มีเงินคืน)", "ส่วนลดเบี้ย: SA 500,000-999,999 ลด 0.50 บาท/1,000 SA; ตั้งแต่ 1 ล้านลด 1.00 บาท/1,000 SA. ลดหย่อนภาษีได้ตามเกณฑ์ (สูงสุด 100,000 บาท)", "1"], ["คุ้มครองชีวิต", "AIA 20Pay Life (Non Par)", "20 ปี", "ตลอดชีพ (ถึงอายุ 99)", "— (ไม่ได้ดึงในรอบนี้)", "—", "เสียชีวิต 100% SA; ครบสัญญา (อายุ 99) รับ 100% SA", "มี WP ยกเว้นเบี้ยหลักหากทุพพลภาพสิ้นเชิงถาวรก่อนอายุ 60 (ซื้อ rider WP)", "6"], ["คุ้มครองชีวิต", "AIA 10&15 Pay Life (Non Par)", "เลือก 10 หรือ 15 ปี", "ตลอดชีพ (ถึงอายุ 99)", "— (ไม่ได้ดึงในรอบนี้)", "—", "เสียชีวิต/ครบสัญญา: จ่ายตัวที่มากกว่าระหว่าง 100% SA, เงินค่าเวนคืน, เบี้ยหลักที่ชำระแล้ว", "WP ตามเงื่อนไขเดียวกัน", "15"], ["คุ้มครองชีวิต", "AIA Pay Life Plus (Non Par)", "เลือก 10 / 15 / 20 ปี", "ตลอดชีพ", "— (ไม่ได้ดึงในรอบนี้)", "—", "คุ้มครองชีวิตตลอดชีพ", "มีการยกเว้นเบี้ยหลักเมื่อได้รับการวินิจฉัยตามเงื่อนไข (ตรวจรายละเอียดในเอกสารต้นฉบับ)", "45"], ["คุ้มครองชีวิต", "AIA Senior Happy (ตลอดชีพ 90/90)", "จ่ายถึงอายุ 90", "ถึงอายุ 90", "ไม่ได้ดึงช่วงอายุ (จุดขาย: รับสูงวัย)", "—", "เสียชีวิตปี 1-2 จากการเจ็บป่วย: 102% ของเบี้ยหลักที่ชำระ; จากอุบัติเหตุ: 100% SA+เบี้ย. ตั้งแต่ปีที่ 3: มากกว่าระหว่าง 100% SA / เงินเวนคืน / เบี้ยที่ชำระ", "ไม่ต้องตอบคำถามสุขภาพ, เบี้ยคงที่. อุบัติเหตุไม่คุ้มครอง: ถูกฆ่า/ทำร้ายโดยเจตนา, ฆ่าตัวตาย, ติดเชื้อโรค (ยกเว้นติดจากบาดแผลอุบัติเหตุ) ฯลฯ", "14"], ["คุ้มครองชีวิต", "AIA Protection 65 (Non Par)", "จ่ายถึงอายุ 65", "ถึงอายุ 99", "— (ไม่ได้ดึงในรอบนี้)", "—", "เงินจ่ายคืนรายงวดการันตี ตั้งแต่อายุ 65-98; รวมสูงสุด 760%", "WP rider ยกเว้นเบี้ยหลัก", "53"], ["คุ้มครองชีวิต", "AIA Life Protector 70 (Non Par)", "จ่ายถึงอายุ 70", "—", "อายุ 18-60", "SA ขั้นต่ำ 500,000 บาท", "เสียชีวิต 100% SA", "เข้าร่วมโครงการ AIA Vitality: ได้โบนัส Vitality (ดูหัวข้อ Vitality). Life Protector 80 เป็นไฟล์ภาพ ยังไม่ได้อ่าน", "51"], ["คุ้มครอง+โรคร้ายแรง", "AIA CI SuperCare (+ฉบับ Prestige)", "เลือก 10 หรือ 20 ปี", "—", "อายุ 15 วัน - 65 ปี", "SA ขั้นต่ำ 200,000 บาท (สูงสุด 5,000,000 ถ้าไม่มีรายได้ เช่น นักเรียน แม่บ้าน ผู้เกษียณ)", "คุ้มครองโรคร้ายแรงสูงสุด 62 โรค/การรักษา", "ระยะรอคอย 60 วัน: โรคร้ายแรงที่เกิดภายใน 60 วันนับจากวันเริ่มคุ้มครอง ไม่คุ้มครอง", "5, 38, 48"], ["คุ้มครอง+โรคร้ายแรง", "AIA CI ProCare", "ชำระคงที่ 20 ปี", "ตลอดชีพ (ถึงอายุ 99)", "— (ไม่ได้ดึงในรอบนี้)", "—", "ผลประโยชน์รวมสูงสุด 800% SA: โรคระยะต้น-กลางสูงสุด 5 ครั้ง, โรคระดับรุนแรงสูงสุด 6 ครั้ง, ดูแลต่อเนื่องหลังโรคร้ายแรงสูงสุด 200%", "แบบประกันที่เข้าร่วมโครงการ AIA Vitality", "22"], ["สะสมทรัพย์", "AIA Endowment 15/25 (Non Par)", "15 ปี", "25 ปี", "— (ไม่ได้ดึงในรอบนี้)", "—", "เงินคืนรายงวด 1% ของ SA ทุกสิ้นปีที่ 2-24; ครบสัญญา 121% SA; เสียชีวิต: ปี 1-11 100%, ปี 12 110%, ปี 13 115%, ปี 14 125%, ปี 15-25 135% (หรือเงินเวนคืน/เบี้ยสุทธิ ตัวที่มากกว่า)", "WP ได้ (สูงสุด 4 ล้านบาท/ราย)", "3"], ["สะสมทรัพย์", "AIA Excellent (Non Par)", "20 ปี", "20 ปี", "— (ไม่ได้ดึงในรอบนี้)", "—", "เงินคืน 10% ของ SA ทุกสิ้นปีที่ 4, 8, 12, 16; ครบสัญญารับ 300% SA; เสียชีวิต: ปี 1-10 100%, ปี 11-15 200%, ปี 16-20 300% (หรือเวนคืน/เบี้ยสุทธิ ตัวที่มากกว่า)", "WP ได้ (สูงสุด 4 ล้านบาท/ราย)", "10"], ["สะสมทรัพย์", "5Pay10 (Non Par)", "5 ปี", "10 ปี", "— (ไม่ได้ดึงในรอบนี้)", "SA เริ่มต้นสูงสุด 200,000 บาท (ตามเอกสาร)", "คุ้มครองชีวิตเพิ่มปีละ 100% สูงสุด 500% (ปีที่ 5 ถึงครบสัญญา); เงินคืน 4% ทุกสิ้นปีที่ 2-9 (8 ครั้ง) + ครบสัญญา 468% = รวม 500%", "เสียชีวิตจากอุบัติเหตุได้ ADB (Free) สูงสุด 500% SA หรือไม่เกิน 1 ล้านบาท/ราย", "9"], ["สะสมทรัพย์", "AIA Saving Sure (Non Par)", "10 ปี", "ถึงอายุ 99", "— (ไม่ได้ดึงในรอบนี้)", "—", "เงินจ่ายคืนรายงวดการันตี ตั้งแต่อายุ 60-98: อายุ 60-65 ปี 12% ... ขยับขึ้นถึง 26% ช่วงอายุ 96-98; ครบสัญญา 100% SA; รวมสูงสุด 820%", "เสียชีวิต: ตัวที่มากกว่าระหว่าง 100% SA / เงินเวนคืน / 105% ของเบี้ยหลักที่ชำระ หักเงินคืนที่จ่ายแล้ว", "17"], ["สะสมทรัพย์", "AIA Lifetime Income 9/99 (Par)", "9 ปี", "ตลอดชีพ (ถึงอายุ 99)", "— (ไม่ได้ดึงในรอบนี้)", "—", "เงินจ่ายคืนรายงวดการันตี ตั้งแต่สิ้นปีที่ 2 ถึงอายุ 98 (เช่น 1% ปีที่ 2-10, 2% ปีที่ 11-20, 3% ปีที่ 21+ ตามภาพตัวอย่าง); เงินครบสัญญารวมสูงสุด 900% SA", "มีเงินปันผลแบบไม่รับรองการจ่าย; ตอบคำถามสุขภาพสั้น (SIO) 3 ข้อ กรณีไม่แนบสัญญาเพิ่มเติม", "16, 25"], ["บำนาญ (ลดหย่อนภาษี)", "AIA Annuity FIX", "จ่ายถึงอายุ 60", "—", "อายุ 20-55", "มูลค่าบำนาญตั้งต้นขั้นต่ำ 200,000 บาท", "รับบำนาญ 162.50% ของมูลค่าตั้งต้น เมื่ออายุ 60-85 ปี รวม 26 ครั้ง (ตัวอย่างในเอกสาร 3,120,000 บาท)", "ลดหย่อนภาษีสูงสุด 200,000 บาท; เสียชีวิตก่อนรับครบ 15 ปี (อายุ 60-74) จ่ายมูลค่าปัจจุบันของบำนาญตามตาราง", "7"], ["บำนาญ (ลดหย่อนภาษี)", "AIA Annuity Sure", "เลือก 9 ปี (อายุ 20-50) หรือถึงอายุ 60 (อายุ 20-55)", "—", "อายุ 20-50 (จ่าย 9 ปี) / 20-55 (จ่ายถึง 60)", "SA ขั้นต่ำ 100,000 บาท", "บำนาญเพื่อวัยเกษียณ", "ลดหย่อนภาษีสูงสุด 200,000 บาท (ไม่รวมเบี้ยสัญญาเพิ่มเติม)", "31"], ["ยูนิตลิงค์", "AIA Smart Wealth (UL)", "เบี้ยครั้งเดียว", "—", "อายุ 15 วัน - 75 ปี", "เบี้ยครั้งเดียวขั้นต่ำ 200,000 บาท", "ลงทุนผ่านกองทุน + ความคุ้มครอง", "ผลตอบแทนไม่รับประกัน ผู้ซื้อรับความเสี่ยงการลงทุน", "11"], ["ยูนิตลิงค์", "AIA Smart Select (UL)", "รายงวด", "ถึงอายุ 99", "อายุ 15 วัน - 70 ปี", "เบี้ยหลักขั้นต่ำ 30,000 บาท/ปี", "เพิ่ม/ถอน/พักเบี้ยได้ (สูงสุด 5% ของเบี้ยหลัก); โบนัสเบี้ยหลัก 2% เมื่อชำระปีที่ 10-19 และ 5% ในปีถัดไปตามเงื่อนไข", "มีสัญญาเพิ่มเติมแบบ PPR แยกเบี้ย", "18"], ["ยูนิตลิงค์", "AIA 20 Pay Link (UL)", "20 ปี", "—", "อายุ 15 วัน - 70 ปี", "—", "การันตีความคุ้มครองสูงสุดตามเงื่อนไข; เพิ่มเงินลงทุนด้วยเบี้ยเพิ่มเติมพิเศษได้; โบนัสพิเศษยามเกษียณ", "โบนัสยามเกษียณ: ต้องชำระเบี้ยหลักครบตามเงื่อนไข (อย่างน้อย 10 ปี) และไม่อยู่ระหว่างหยุดพักชำระ", "23"], ["ยูนิตลิงค์", "AIA Issara Plus (UL)", "รายงวด", "—", "อายุ 15 วัน - 70 ปี", "เบี้ยหลักขั้นต่ำ 6,000 บาท/ปี; เบี้ยเพื่อความคุ้มครอง (RPP) รวมขั้นต่ำ 12,000 บาท/ปี; ATU ขั้นต่ำ 1,000 บาท/ครั้ง", "คุ้มครอง+ลงทุน; เลือกเบี้ยเพิ่มพิเศษ, หยุดพักชำระเบี้ยได้", "ใช้ร่วมกับสัญญาเพิ่มเติมชุด UDR (CI/Care for Cancer/HB Extra/Multi-Pay CI Plus)", "26"], ["ยูนิตลิงค์", "AIA Wealth Max (UL)", "— (ไม่ได้ยืนยัน)", "ถึงอายุ 99", "อายุ 15 วัน - 60 ปี", "ตรวจซ้ำ: เอกสารมีตัวเลข 60,000 บาท (บริบทไม่ชัด)", "โบนัส 2% ของเบี้ยหลักเมื่อชำระครบเงื่อนไข", "ควรเปิดต้นฉบับยืนยันขั้นต่ำเบี้ย", "42"], ["เพรสทีจ (HNW)", "AIA Legacy Prestige", "เลือก 10 หรือ 15 ปี", "ตลอดชีพ", "อายุ 15 วัน - 65 ปี", "SA สูง (กลุ่มความมั่งคั่ง); ตัวอย่างเอกสารเบี้ยปีละ 946,200 บาท", "มรดก/ส่งต่อความมั่งคั่ง", "ส่วนลดเบี้ยกรณีสุขภาพดีกว่ามาตรฐาน (อายุ 18-65); เกณฑ์ตรวจสุขภาพ เช่น ความดันอายุ 51-60 ไม่เกิน 145/90", "8"], ["เพรสทีจ (HNW)", "AIA Legacy Prestige Protection", "5 ปี", "ตลอดชีพ", "อายุ 15 วัน - 75 ปี", "—", "คุ้มครองชีวิตตลอดชีพ ชำระเบี้ยสั้น 5 ปี", "เงินกู้ตามกรมธรรม ดอกเบี้ย 6.3%/ปี (ฉบับ 2024) ต้องผ่านเกณฑ์ตรวจสุขภาพ", "4"], ["เพรสทีจ (HNW)", "AIA Legacy Prestige Plus", "เลือก 10 / 15 / 20 ปี", "ตลอดชีพ (WP คุ้มครองสูงสุดถึงอายุ 80)", "อายุ 15 วัน - 75 ปี", "SA ขั้นต่ำ 10,000,000 บาท", "ตลอดชีพ; WP คุ้มครองโรคร้ายแรงระดับรุนแรง 44 โรค/การรักษา", "เงินกู้ตามกรมธรรม ดอกเบี้ย 6.5%/ปี", "19"], ["เพรสทีจ (HNW)", "AIA Infinite Wealth Prestige (UL)", "เลือก 5 / 10 / 15 / 20 ปี", "—", "อายุ 18-75 ปี", "SA ขั้นต่ำ 15 ล้านบาท", "ลงทุน+ส่งต่อมรดก; โบนัสพิเศษยามเกษียณ", "โบนัสยามเกษียณ: อายุครบ 55 ณ วันครบรอบ, กรมธรรมมีผลอย่างน้อย 10 ปี, ชำระเบี้ยหลักครบ/อย่างน้อย 10 ปี, ไม่เคยหยุดพักชำระ", "27"], ["เพรสทีจ (HNW)", "AIA Infinite Gift Prestige (UL)", "เลือกระยะชำระ", "—", "อายุ 15 วัน - 17 ปี (เด็ก)", "—", "ส่วนลดค่าการประกันภัย 20% ของอัตราค่าการประกันภัย; เพิ่มเงินลงทุนด้วยเบี้ยพิเศษได้", "โบนัสยามเกษียณเงื่อนไขเดียวกับ Infinite Wealth", "29"], ["เพรสทีจ (HNW)", "AIA Exclusive Wealth Prestige (UL)", "5 ปี", "—", "อายุ 18-75 ปี (และ 15 วัน - 17 ปี)", "—", "ชำระสั้น 5 ปี; เพิ่มเงินลงทุนด้วยเบี้ยพิเศษได้", "โบนัสยามเกษียณเงื่อนไขเดียวกัน", "58"], ["เพรสทีจ (HNW)", "AIA Elite Income Prestige (UL)", "5 ปี", "ตลอดชีพ (ถึงอายุ 99) หรือตราบเท่าที่มูลค่ากรมธรรมเพียงพอ", "อายุ 15 วัน - 70 ปี", "เบี้ยหลักรายปีขั้นต่ำ 500,000 บาท", "ชำระเบี้ย 5 ปี รับรายได้/ความคุ้มครองระยะยาว", "ตัวอย่างจำนวนปีชำระ 5 ปี และ SA 6,000,000 - 20,000,000 บาทในเอกสาร", "63"]], "rider": [["AIA HB Extra", "ชดเชยรายได้ผู้ป่วยใน", "—", "จ่ายสูงสุดไม่เกิน 365 วัน/การเข้าพัก; รวมสูงสุด 1,260 วัน (ข้อ 1); บางข้อสูงสุด 3 เท่า/วัน", "รอคอย 30 วัน (บางกรณี) และ 120 วัน (บางโรค) นับจากวันเริ่มคุ้มครอง", "ชุด UDR ใช้แนบกับ Issara", "67, 68"], ["AIA Health Happy", "ค่ารักษาพยาบาลแบบเหมาจ่าย", "อายุ 11-75 ปี ต่ออายุถึง 98 คุ้มครองถึง 99", "วงเงินสูงสุดตามแผนสูงสุดถึง 25 ล้านบาท; เพิ่มเป็น 2 เท่าเมื่อป่วยโรคร้ายแรงครั้งแรก; รักษาต่อเนื่อง OPD ภายใน 30 วันหลังออกจาก รพ. สูงสุด 2 ครั้ง", "ไม่คุ้มครองการป่วยที่เกิดใน 30 วันแรก; โรคตามรายการใน 120 วันแรก", "Health Happy Kids (ไฟล์ 78) เป็นฉบับเด็ก", "84, 78"], ["AIA Health Saver", "ค่ารักษาพยาบาล", "อายุ 11-75 ปี", "ผลประโยชน์เพิ่มเป็น 2 เท่าเมื่อป่วยโรคร้ายแรง 6 โรค (ครั้งแรก); วงเงินตามแผน (ตรวจซ้ำ: เอกสารมีตัวเลข 500,000)", "รายละเอียดรอคอยดูต้นฉบับ", "", "90"], ["AIA Health Starter", "ค่ารักษาพยาบาล (IPD/OPD)", "—", "มีหมวดค่าห้อง ค่ายา ฯลฯ และรักษาผู้ป่วยในสูงสุด 30 วัน (ตามเอกสาร)", "ดูต้นฉบับ", "ผู้เริ่มต้นทำประกันสุขภาพ", "73"], ["AIA InfiniteCare", "ค่ารักษาพยาบาลระดับสูง", "—", "ตัวเลือก First Dollar หรือมีส่วนแรก 100,000 / 300,000 บาท; ตัวอย่างเบี้ยรายปี 201,000 / 140,700 / 100,500 บาท", "ดูต้นฉบับ", "คุ้มครองตรวจสุขภาพ วัคซีน ทันตกรรมตามแผน", "83"], ["AIA Health CI Hero", "ค่ารักษา+โรคร้ายแรง", "—", "เหมาจ่ายสูงสุด 12 ล้านบาท/รอบปีกรมธรรม", "ดูต้นฉบับ", "ฉบับใหม่ ก.ค. 2026", "89"], ["AIA CI Plus", "โรคร้ายแรง", "อายุ 15 วัน - 75 ปี ต่ออายุถึง 98", "จ่าย 100% SA เมื่อวินิจฉัยโรคร้ายแรง; SA สูงสุด 25 ล้านบาท/ราย (15 ล้านถ้าไม่มีรายได้)", "รอคอย 60 วันนับจากเริ่มคุ้มครอง/ต่ออายุ", "CI Top-up (ไฟล์ 76) ต่อเติม: อายุ 15 วัน-75 ปี, รอคอย 60 วัน", "92, 76"], ["AIA Multi-Pay CI", "โรคร้ายแรงจ่ายหลายครั้ง", "—", "รวมสูงสุด 800% SA: ระยะต้น-กลาง 40% SA สูงสุด 5 ครั้ง; รุนแรง 100% SA สูงสุด 6 ครั้ง; Relapsed CI อีก 100% (โรคละ 1 ครั้ง)", "ดูต้นฉบับ", "ฉบับ Family 2022", "88"], ["AIA Multi-Pay CI Plus", "โรคร้ายแรงจ่ายหลายครั้ง", "อายุ 15 วัน - 75 ปี ต่ออายุถึง 98", "รวมสูงสุด 800% SA: ระยะต้น-กลางสูงสุด 5 ครั้ง; รุนแรงสูงสุด 6 ครั้ง; ดูแลต่อเนื่องจ่ายรายเดือน 60 เดือน รวม 200%", "รอคอย 60 วัน", "", "86"], ["AIA Care for Cancer", "มะเร็ง", "อายุ 15 วัน - 70 ปี ต่ออายุถึง 79", "SA สูงสุด 10 ล้านบาท/ราย; มีค่าชดเชยรายวัน OPD และตรวจ MRI/CT สูงสุด 2 ครั้ง", "รอคอย 60 วัน", "", "91"], ["AIA Health Cancer", "มะเร็ง (มรณกรรม+รักษา รพ.)", "—", "ผลประโยชน์เสียชีวิตและรักษาใน รพ. จากมะเร็ง", "รอคอย 30 วันนับจากเริ่มคุ้มครอง", "", "80"], ["AIA TPD", "ทุพพลภาพถาวรสิ้นเชิง", "อายุ 15 วัน - 70 ปี ต่ออายุถึง 79", "จ่ายเมื่อทุพพลภาพถาวรสิ้นเชิง", "—", "SA ขั้นต่ำ 100,000 บาท; ตรวจสุขภาพตามเกณฑ์บริษัท", "81"], ["AIA WPCI", "ยกเว้นเบี้ยเมื่อเป็นโรคร้ายแรง", "ตามแบบหลัก", "ยกเว้นเบี้ยหลักเมื่อวินิจฉัยโรคร้ายแรง", "—", "ระยะชำระเบี้ย = ตามแบบหลัก", "74"], ["AIA AI/RCC, ADD/RCC, ADB/RCC", "อุบัติเหตุ", "AI/RCC ฯลฯ (16-64 ปี / 1 เดือน-64 ปี)", "ชดเชยรายสัปดาห์ (สูงสุด 52 สัปดาห์) ฯลฯ", "—", "", "71"], ["Lady Care / Lady Care Plus", "โรคเฉพาะสตรี/ครรภ์", "—", "ผลประโยชน์ครรภ์/ทารก (เช่น อายุครรภ์ 28 สัปดาห์ขึ้นไป)", "ดูต้นฉบับ", "", "69, 72"], ["AIA Vitality (โครงการ)", "สิทธิประโยชน์สุขภาพ/โบนัส", "—", "โบนัส Vitality สูงสุด 20% ตามสถานะ; โบนัสสุขภาพสูงสุด 18% ตามสถานะ", "—", "ใช้กับแบบที่เข้าร่วมโครงการ เช่น Life Protector 70, CI ProCare", "20, 51"]], "pa": [["AIANPA5500", "ขั้น 1-2", "15 วัน-60", "75", "1,100,000", "1,100,000", "550,000", "550,000", "100,000", "PH 1,100,000", "5,500", "6,700"], ["AIANPA7900", "ขั้น 1-2 (ต้องมีรายได้)", "15 วัน-74", "75", "2,200,000", "2,200,000", "1,100,000", "500,000", "100,000", "PH 2,200,000; BB 10,000", "7,900", "9,700"], ["AIANPA32K", "ขั้น 1-2", "25-60", "75", "10,000,000", "10,000,000", "1,000,000", "1,000,000", "300,000", "BB 100,000; HU 5,000/วัน (ICU 2 เท่า สูงสุด 7 วัน)", "32,000", "40,000"], ["AIANPA3300", "ขั้น 1-2", "16-60", "75", "500,000", "500,000", "250,000", "250,000", "40,000", "PH 500,000; FCG 3,000/เดือน x 60", "3,300", "4,100"], ["AIANPA4600", "ขั้น 1-2", "15 วัน-74", "75", "600,000", "600,000", "300,000", "600,000", "100,000", "PH 600,000; BB 5,000", "4,600", "5,600"], ["AIANPA3900", "ขั้น 1-2", "15 วัน-70", "75", "700,000", "700,000", "350,000", "350,000", "30,000", "BB 7,000; ค่าปลงศพ 50,000", "3,900", "4,900"], ["AIANPA2500", "ขั้น 1-2 (มอเตอร์ไซค์)", "15 วัน-70", "75", "500,000", "500,000", "250,000", "250,000", "20,000", "BB 10,000; ค่าปลงศพ 10,000", "2,500", "3,050"], ["AIANPA3000", "ขั้น 1-2 (มอเตอร์ไซค์)", "15 วัน-74", "75", "600,000", "600,000", "300,000", "600,000", "35,000", "PH 600,000; BB 2,000", "3,000", "3,600"], ["AIANPA3800", "ขั้น 1-2 (มอเตอร์ไซค์)", "16-60", "75", "500,000", "500,000", "250,000", "250,000", "50,000", "PP 1,558,000; PH 500,000; ND 500,000; HU 500/วัน; FCG 1,000/เดือน", "3,800", "4,700"], ["AIANPA2280", "ขั้น 3 เท่านั้น", "16-60", "75", "200,000", "200,000", "100,000", "100,000", "20,000", "—", "2,280", "—"], ["AIANPA1600", "ขั้น 3 เท่านั้น", "16-60", "75", "200,000", "200,000", "100,000", "100,000", "30,000", "— (ตรวจซ้ำ: รหัสแผนในไฟล์ไม่ตรงกับเบี้ย 2,700)", "2,700", "—"], ["AIANPA2100", "ขั้น 3 เท่านั้น", "16-60", "75", "300,000", "300,000", "150,000", "150,000", "40,000", "—", "3,500", "—"], ["AIANPA3330 (MA10%)", "อาชีพเสี่ยงพิเศษ", "15 วัน-60", "75", "500,000", "500,000", "50,000", "250,000", "60,000", "เบี้ยตามกลุ่มอาชีพ 1/2/3 = 3,330 / 4,100 / 4,700", "3,330 (กลุ่ม 1)", "4,100 (กลุ่ม 2) / 4,700 (กลุ่ม 3)"]], "pah": ["แผน", "กลุ่มอาชีพ/ลักษณะ", "อายุรับประกัน (ปี)", "ต่ออายุถึง", "เสียชีวิต/สูญเสียอวัยวะ/สายตา (AD,DD)", "ทุพพลภาพถาวร (PD)", "ถูกฆาตกรรม/ทำร้าย (MA)", "เสียชีวิตขับขี่/โดยสารมอเตอร์ไซค์ (MC)", "ค่ารักษา (ME)", "ผลประโยชน์อื่น", "เบี้ยรายปี ขั้นอาชีพ 1 (อายุฐาน)", "เบี้ยรายปี ขั้นอาชีพ 2 (อายุฐาน)"]};
+function esc(s){return String(s).replace(/\s*\((?:ไม่ได้ยืนยันในไฟล์|ไฟล์\s*\d+)\)/g,'').replace(/[&<>]/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;'}[c]})}
+function kv(k,v){return v&&v!=='—'&&v.indexOf('ไม่ได้ดึง')<0?'<div class="kv"><b>'+k+':</b> '+esc(v)+'</div>':''}
+var grp='ทั้งหมด',gs=['ทั้งหมด'];
+D.main.forEach(function(r){if(gs.indexOf(r[0])<0)gs.push(r[0])});
+var chips=document.getElementById('chips');
+gs.forEach(function(g){var b=document.createElement('button');b.className='chip'+(g===grp?' on':'');b.textContent=g;b.onclick=function(){grp=g;[].forEach.call(chips.children,function(c){c.classList.toggle('on',c===b)});document.getElementById('gl').textContent=g==='ทั้งหมด'?'':'กลุ่ม: '+g;drawMain();tog(false);document.getElementById('main').scrollIntoView()};chips.appendChild(b)});
+function drawMain(){
+ var q=document.getElementById('q').value.toLowerCase(),h='';
+ D.main.forEach(function(r,i){
+  if(grp!=='ทั้งหมด'&&r[0]!==grp)return;
+  if(q&&r.join(' ').toLowerCase().indexOf(q)<0)return;
+  h+='<article class="out card"><span class="tag">'+esc(r[0])+'</span><h3>'+esc(r[1])+'</h3>'+kv('ชำระเบี้ย',r[2])+kv('คุ้มครอง',r[3])+kv('อายุรับ',r[4])+kv('ขั้นต่ำ',r[5])+'<div class="ben in">'+esc(r[6])+'</div>'+(r[7]?'<details><summary>เงื่อนไข / ข้อควรรู้</summary>'+esc(r[7])+'</details>':'')+pick('m',i)+'</article>'});
+ document.getElementById('mainGrid').innerHTML=h||'<div class="empty">ไม่พบรายการ ลองเปลี่ยนคำค้นหรือกลุ่ม</div>'}
+function drawRider(){
+ var q=document.getElementById('qr').value.toLowerCase(),h='';
+ D.rider.forEach(function(r,i){
+  if(q&&r.join(' ').toLowerCase().indexOf(q)<0)return;
+  h+='<article class="out card"><span class="tag">'+esc(r[1])+'</span><h3>'+esc(r[0])+'</h3>'+kv('อายุรับ',r[2])+'<div class="ben in">'+esc(r[3])+'</div>'+kv('รอคอย/ข้อยกเว้น',r[4])+kv('หมายเหตุ',r[5])+pick('r',i)+'</article>'});
+ document.getElementById('riderGrid').innerHTML=h||'<div class="empty">ไม่พบรายการ</div>'}
+document.getElementById('q').oninput=drawMain;document.getElementById('qr').oninput=drawRider;
+(function(){var p=D.pa,t='<tr>'+D.pah.slice(0,12).map(function(c){return'<th>'+esc(c)+'</th>'}).join('')+'</tr>';
+ var hdr=0;
+ p.slice(hdr).forEach(function(r){t+='<tr>'+r.slice(0,12).map(function(c){return'<td>'+esc(c)+'</td>'}).join('')+'</tr>'});
+ document.getElementById('paT').innerHTML=t})();
+var sel={m:[],r:[]},LB={m:['กลุ่ม','ชำระเบี้ย','คุ้มครอง','อายุรับ','ขั้นต่ำ','ผลประโยชน์หลัก','เงื่อนไข / ข้อควรรู้'],r:['ประเภท','อายุรับ','ผลประโยชน์หลัก','รอคอย / ข้อยกเว้น','หมายเหตุ']};
+var IX={m:[0,2,3,4,5,6,7],r:[1,2,3,4,5]},NM={m:1,r:0},TT={m:'แบบประกันหลัก',r:'สัญญาเพิ่มเติม'};
+function pick(k,i){return '<label class="pick"><input type="checkbox" data-k="'+k+'" data-i="'+i+'"'+(sel[k].indexOf(i)>=0?' checked':'')+'> เทียบ</label>'}
+document.addEventListener('change',function(e){var c=e.target;if(!c.dataset||!c.dataset.k)return;var k=c.dataset.k,i=+c.dataset.i,a=sel[k],p=a.indexOf(i);
+ if(c.checked){if(a.length>=4){c.checked=false;alert('เลือกเทียบได้สูงสุด 4 รายการต่อประเภท');return}a.push(i)}else if(p>=0)a.splice(p,1);drawCmp()});
+function drawCmp(){
+ var h='',n=sel.m.length+sel.r.length;
+ ['m','r'].forEach(function(k){var a=sel[k];if(!a.length)return;var rs=D[k==='m'?'main':'rider'];
+  h+='<h3>'+TT[k]+'</h3><div class="out tw"><table><tr><th></th>'+a.map(function(i){return'<th>'+esc(rs[i][NM[k]])+'</th>'}).join('')+'</tr>';
+  LB[k].forEach(function(l,j){var v=a.map(function(i){return rs[i][IX[k][j]]||'—'});
+   var df=a.length>1&&v.some(function(x){return x!==v[0]});
+   h+='<tr'+(df?' class="df"':'')+'><td>'+l+(df?' •':'')+'</td>'+v.map(function(x){return'<td>'+esc(x)+'</td>'}).join('')+'</tr>'});
+  h+='</table></div>'});
+ document.getElementById('cmpOut').innerHTML=h||'<div class="empty">ยังไม่ได้เลือกรายการ ติ๊ก "เทียบ" ที่การ์ดด้านบน</div>';
+ document.getElementById('bar').classList.toggle('show',n>0);
+ document.getElementById('barT').textContent='เลือกแล้ว '+n+' รายการ';
+ var b=document.getElementById('bd');b.hidden=!n;b.textContent=n}
+document.getElementById('go').onclick=function(){location.hash='cmp';document.getElementById('cmp').scrollIntoView()};
+document.getElementById('clr').onclick=function(){sel={m:[],r:[]};drawCmp();drawMain();drawRider()};
+function tog(o){document.body.classList.toggle('op',o);if(o)[].forEach.call(document.querySelectorAll('#dr a,#chips .chip'),function(e,i){e.style.animationDelay=(.05+.045*i)+'s'});document.getElementById('mb').setAttribute('aria-expanded',o)}
+document.getElementById('mb').onclick=function(){tog(!document.body.classList.contains('op'))};
+document.getElementById('ov').onclick=function(){tog(false)};
+document.addEventListener('keydown',function(e){if(e.key==='Escape')tog(false)});
+[].forEach.call(document.querySelectorAll('#dr a'),function(a){a.onclick=function(){tog(false)}});
+var TN=[['แดง AIA',220,345],['ฟ้าทะเล',210,205],['เขียวมิ้นต์',160,160],['ม่วงลาเวนเดอร์',260,265],['ส้มอบอุ่น',30,22],['ชมพูพาสเทล',340,330]];
+var TG=[['st','สไตล์',[['neu','นูนนุ่ม (Neumorphism)'],['glass','กระจกใส (Glass)'],['brut','เส้นหนา (Neobrutalism)']]],['md','โหมด',[['auto','อัตโนมัติ'],['light','สว่าง'],['dark','มืด']]],['tn','โทนสี',TN.map(function(t,i){return[i,t[0],'hsl('+t[2]+' 75% 50%)']})]];
+var th={st:'neu',md:'auto',tn:0};
+try{var sv=JSON.parse(localStorage.getItem('aiaTheme')||'null');if(sv)th=sv}catch(e){}
+function applyTh(){
+ var r=document.documentElement,d=th.md==='dark'||(th.md==='auto'&&matchMedia('(prefers-color-scheme:dark)').matches),t=TN[th.tn]||TN[0],b=t[1],a=t[2];
+ function v(k,x){r.style.setProperty(k,x)}
+ v('--bg',d?'hsl('+b+' 14% 19%)':'hsl('+b+' 20% 90%)');v('--tx',d?'hsl('+b+' 20% 92%)':'hsl('+b+' 25% 20%)');v('--mu',d?'hsl('+b+' 10% 66%)':'hsl('+b+' 10% 40%)');
+ v('--sh1',d?'hsl('+b+' 12% 25%)':'hsl('+b+' 30% 98%)');v('--sh2',d?'hsl('+b+' 18% 11%)':'hsl('+b+' 16% 74%)');v('--ac',d?'hsl('+a+' 85% 68%)':'hsl('+a+' 75% 42%)');
+ r.setAttribute('data-st',th.st);
+ try{localStorage.setItem('aiaTheme',JSON.stringify(th))}catch(e){}
+ [].forEach.call(document.querySelectorAll('#thm .chip'),function(c){c.classList.toggle('on',String(th[c.dataset.k])===c.dataset.id)})}
+TG.forEach(function(g){var w=document.createElement('div');w.innerHTML='<div class="kv"><b>'+g[1]+'</b></div>';var bx=document.createElement('div');bx.style.cssText='display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px';
+ g[2].forEach(function(it){var b=document.createElement('button');b.className='chip';b.dataset.k=g[0];b.dataset.id=String(it[0]);b.innerHTML=(it[2]?'<span class="dot" style="background:'+it[2]+'"></span>':'')+esc(it[1]);b.onclick=function(){th[g[0]]=g[0]==='tn'?+it[0]:it[0];applyTh()};bx.appendChild(b)});
+ w.appendChild(bx);document.getElementById('thm').appendChild(w)});
+matchMedia('(prefers-color-scheme:dark)').addEventListener('change',applyTh);
+function applyTh(){
+ var r=document.documentElement,d=th.md==='dark';
+ function v(k,x){r.style.setProperty(k,x)}
+ v('--bg',d?'#000000':'#ffffff');v('--tx',d?'#f5f5f5':'#111111');v('--mu',d?'#a0a0a0':'#666666');v('--ac',d?'#ff5c82':'#d31145');v('--red',d?'#ff5c82':'#d31145');
+ v('--g1',d?'rgba(255,60,100,.20)':'rgba(211,17,69,.10)');v('--g2',d?'rgba(255,255,255,.06)':'rgba(0,0,0,.04)');v('--g3',d?'rgba(255,60,100,.12)':'rgba(211,17,69,.06)');
+ v('--gl1',d?'rgba(255,255,255,.14)':'rgba(255,255,255,.72)');v('--gl2',d?'rgba(255,255,255,.05)':'rgba(255,255,255,.34)');v('--gb',d?'rgba(255,255,255,.22)':'rgba(255,255,255,.9)');
+ v('--gs',d?'rgba(0,0,0,.40)':'rgba(40,60,120,.12)');v('--gh',d?'rgba(255,255,255,.10)':'rgba(70,90,150,.14)');v('--gi',d?'rgba(255,255,255,.25)':'rgba(255,255,255,.95)');
+ r.setAttribute('data-st','glass');r.style.colorScheme=d?'dark':'light';
+ var t=document.getElementById('dm');t.textContent=d?'☀️':'🌙';t.setAttribute('aria-label',d?'เปลี่ยนเป็นโหมดสว่าง':'เปลี่ยนเป็นโหมดมืด');
+ try{localStorage.setItem('aiaTheme',JSON.stringify(th))}catch(e){}}
+if(th.md!=='dark')th.md='light';
+document.getElementById('dm').onclick=function(){th.md=th.md==='dark'?'light':'dark';applyTh();var e=this;e.classList.remove('spin');void e.offsetWidth;e.classList.add('spin')};
+applyTh();
+document.addEventListener('pointerdown',function(e){var t=e.target.closest&&e.target.closest('.chip,.btn,#dr a,#mb,#dm');if(!t)return;var r=t.getBoundingClientRect(),s=document.createElement('span'),z=Math.max(r.width,r.height)*2;s.className='rp';s.style.cssText='width:'+z+'px;height:'+z+'px;left:'+(e.clientX-r.left-z/2)+'px;top:'+(e.clientY-r.top-z/2)+'px';t.appendChild(s);setTimeout(function(){s.remove()},650)});
+var dw=document.querySelector('.dw'),dd=document.getElementById('dd'),qi=document.getElementById('q'),hl=-1;
+function ddList(){var q=qi.value.toLowerCase(),h='<button class="di" data-v="">ทั้งหมด</button>',g='',n=0;
+ D.main.forEach(function(r){if(q&&r[1].toLowerCase().indexOf(q)<0&&r[0].toLowerCase().indexOf(q)<0)return;if(r[0]!==g){g=r[0];h+='<div class="dg">'+esc(g)+'</div>'}h+='<button class="di" data-v="'+esc(r[1]).replace(/"/g,'&quot;')+'">'+esc(r[1])+'</button>';n++});
+ dd.innerHTML=n?h:'<div class="dg" style="color:var(--mu)">ไม่พบรายการ</div>';hl=-1}
+function ddOpen(o){dd.hidden=!o;dw.classList.toggle('open',o);qi.setAttribute('aria-expanded',o);if(o)ddList()}
+qi.addEventListener('focus',function(){ddOpen(true)});qi.addEventListener('click',function(){ddOpen(true)});qi.addEventListener('input',function(){ddOpen(true)});
+dd.addEventListener('mousedown',function(e){e.preventDefault()});
+dd.addEventListener('click',function(e){var b=e.target.closest('.di');if(!b)return;qi.value=b.dataset.v;drawMain();ddOpen(false);qi.blur()});
+document.addEventListener('click',function(e){if(!dw.contains(e.target))ddOpen(false)});
+qi.addEventListener('keydown',function(e){var it=[].slice.call(dd.querySelectorAll('.di'));
+ if(e.key==='Escape'){ddOpen(false);return}
+ if(e.key==='ArrowDown'||e.key==='ArrowUp'){e.preventDefault();if(dd.hidden){ddOpen(true);it=[].slice.call(dd.querySelectorAll('.di'))}hl=(hl+(e.key==='ArrowDown'?1:-1)+it.length)%it.length;it.forEach(function(x,i){x.classList.toggle('hl',i===hl)});if(it[hl])it[hl].scrollIntoView({block:'nearest'})}
+ if(e.key==='Enter'&&hl>=0){e.preventDefault();it[hl].click()}});
+drawCmp();drawMain();drawRider();
+</script></body></html>
