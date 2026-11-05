@@ -219,6 +219,7 @@ textarea.fi{min-height:150px;font-family:ui-monospace,Menlo,Consolas,monospace;f
 <label class="pf">ทุนประกัน (บาท)<input class="fi" id="pSA" type="number" min="0" step="10000" value="1000000" inputmode="numeric"></label>
 <label class="pf">งวดชำระ<select class="fi" id="pMd"><option value="y">รายปี</option><option value="h">ราย 6 เดือน</option><option value="q">ราย 3 เดือน</option><option value="m">รายเดือน</option></select></label>
 </div>
+<label class="pf" style="margin:4px 0 10px">คำนวณเฉพาะแบบ (ชื่อตามโบรชัวร์) เว้นว่าง = เทียบทุกแบบที่ใส่อัตราไว้<span style="display:flex;gap:8px"><input class="fi" id="pPd" list="pPL" autocomplete="off" placeholder="พิมพ์หรือเลือกชื่อแบบ เช่น AIA Excellent" style="flex:1"><button class="btn g" id="pPc" type="button">ล้าง</button></span><datalist id="pPL"></datalist></label>
 <div id="pcR"></div>
 <div id="pcPA"></div>
 </div>
@@ -391,9 +392,13 @@ function names(){var a=D.main.map(function(r){return r[1]});Object.keys(R).forEa
 function disc(t,sa){var b=-1,d=0;(t||'').split(/[,;\n]+/).forEach(function(x){var q=x.split(':'),th=parseFloat(q[0]),v=parseFloat(q[1]);if(!isNaN(th)&&!isNaN(v)&&sa>=th&&th>b){b=th;d=v}});return d}
 function ageOf(n){var r=D.main.filter(function(x){return x[1]===n})[0];var t=r&&r[4]||'';return t&&t!=='—'&&t.indexOf('ไม่ได้ดึง')<0?t:''}
 function open(o){document.body.classList.toggle('pc',o);if(o){document.body.classList.remove('cs');drawR();fillB()}}
+function nk(t){return String(t).toLowerCase().replace(/\s+/g,'')}
+function pick1(){var v=nk($('pPd').value);if(!v)return null;var all=names().map(function(n){return{n:n}}).concat(D.pa.map(function(r){return{n:r[0],pa:r}}));
+ var e=all.filter(function(x){return nk(x.n)===v});if(e.length)return e[0];var f=all.filter(function(x){return nk(x.n).indexOf(v)>=0});return f.length===1?f[0]:{n:null}}
 function drawR(){
+ var one=pick1();$('pPL').innerHTML=names().concat(D.pa.map(function(r){return r[0]})).map(function(n){return'<option value="'+attr(n)+'">'}).join('');
  var age=Math.round(+$('pAge').value),sex=$('pSex').value,sa=+$('pSA').value,md=$('pMd').value,f=md==='y'?1:MF[md],rows=[],miss=[],none=0;
- names().forEach(function(n){var e=R[n];if(!e){none++;return}var r=e[sex]&&e[sex][age];if(r==null){miss.push(n);return}
+ var NL=!one?names():(one.n&&!one.pa?[one.n]:[]);NL.forEach(function(n){var e=R[n];if(!e){none++;return}var r=e[sex]&&e[sex][age];if(r==null){miss.push(n);return}
   var d=disc(e.tr,sa),net=Math.max(0,r-d),an=sa/1000*net;rows.push({n:n,r:r,d:d,an:an,pd:an*f})});
  rows.sort(function(a,b){return a.an-b.an});
  var h='',lb=md==='y'?'เบี้ยรายปี':'เบี้ยต่องวด',cheap=rows.length?rows[0].an:0;
@@ -403,11 +408,18 @@ function drawR(){
    h+='<tr'+(i===0&&rows.length>1?' class="best"':'')+'><td><b>'+esc(x.n)+'</b>'+(ag?'<div class="sm">อายุรับ: '+esc(ag)+'</div>':'')+'</td><td class="n">'+nf(x.r,2)+(x.d?'<div class="sm">ลด '+nf(x.d,2)+'</div>':'')+'</td><td class="n">'+nf(Math.round(x.an))+'</td>'+(md==='y'?'':'<td class="n">'+nf(Math.round(x.pd))+'</td>')+'<td class="n">'+(i===0?'ถูกสุด':'+'+nf(Math.round(x.an-cheap))+' ('+nf((x.an/cheap-1)*100,0)+'%)')+'</td></tr>'});
   h+='</table></div>'}
  if(miss.length)h+='<p class="sm">ไม่มีอัตราที่อายุ '+age+': '+esc(miss.join(', '))+'</p>';
- if(none)h+='<p class="sm">ยังไม่ได้ใส่อัตราเบี้ย '+none+' แบบจากรายการแบบประกันหลัก</p>';
+ if(none&&!one)h+='<p class="sm">ยังไม่ได้ใส่อัตราเบี้ย '+none+' แบบจากรายการแบบประกันหลัก</p>';
+ if(one&&one.n===null)h='<div class="empty">ไม่พบชื่อแบบนี้ หรือมีหลายแบบที่ชื่อคล้ายกัน เลือกจากรายการที่ขึ้นมา หรือพิมพ์ชื่อให้ตรงกับโบรชัวร์</div>';
+ else if(one&&one.pa)h='';
+ else if(one){var e1=R[one.n],ag1=ageOf(one.n);
+  if(!e1)h='<div class="empty">ยังไม่ได้ใส่อัตราเบี้ยของ '+esc(one.n)+(ag1?' (อายุรับ '+esc(ag1)+')':'')+' ไปที่แท็บ "ใส่อัตราเบี้ย" แล้วเลือกชื่อแบบนี้เพื่อวางตารางอัตรา</div>';
+  else{var ks=Object.keys(e1[sex]||{}).map(Number).sort(function(a,b){return a-b}),f1=md==='y'?1:MF[md],d1=disc(e1.tr,sa);
+   h+='<h3>เบี้ยของ '+esc(one.n)+' ตามอายุ ('+(sex==='M'?'ชาย':'หญิง')+', ทุน '+nf(sa)+' บาท)</h3>'+(ag1?'<p class="sm">อายุรับ: '+esc(ag1)+'</p>':'')+'<div class="out tw"><table><tr><th class="n">อายุ</th><th class="n">อัตรา/1,000 SA</th><th class="n">เบี้ยรายปี</th>'+(md==='y'?'':'<th class="n">เบี้ยต่องวด</th>')+'</tr>'+ks.map(function(a){var r=e1[sex][a],an=sa/1000*Math.max(0,r-d1);return'<tr'+(a===age?' class="best"':'')+'><td class="n">'+a+'</td><td class="n">'+nf(r,2)+'</td><td class="n">'+nf(Math.round(an))+'</td>'+(md==='y'?'':'<td class="n">'+nf(Math.round(an*f1))+'</td>')+'</tr>'}).join('')+'</table></div>'+(d1?'<p class="sm">หักส่วนลดตามทุน '+nf(d1,2)+' บาท/1,000 SA แล้ว</p>':'')}}
  $('pcR').innerHTML=h;
- var pa=[];D.pa.forEach(function(r){var m=/(\d+)\s*(วัน)?\s*-\s*(\d+)/.exec(r[2]||'');if(!m)return;var lo=m[2]?0:+m[1],hi=+m[3];if(age<lo||age>hi)return;pa.push(r)});
+ var pa=[];D.pa.forEach(function(r){var m=/(\d+)\s*(วัน)?\s*-\s*(\d+)/.exec(r[2]||'');if(!m)return;var lo=m[2]?0:+m[1],hi=+m[3];if(age<lo||age>hi)return;if(one&&one.pa&&one.pa!==r)return;pa.push(r)});
  pa.sort(function(a,b){return parseFloat(String(a[10]).replace(/,/g,''))-parseFloat(String(b[10]).replace(/,/g,''))});
- $('pcPA').innerHTML='<h3>แผน PA ที่รับที่อายุ '+age+' ปี</h3>'+(pa.length?'<div class="out tw"><table><tr><th>แผน</th><th>อายุรับ</th><th class="n">เบี้ย/ปี ขั้น 1</th><th class="n">เบี้ย/ปี ขั้น 2</th><th>ความคุ้มครองหลัก (AD/DD)</th></tr>'+pa.map(function(r){return'<tr><td><b>'+esc(r[0])+'</b></td><td>'+esc(r[2])+'</td><td class="n">'+esc(r[10])+'</td><td class="n">'+esc(r[11])+'</td><td>'+esc(r[4])+'</td></tr>'}).join('')+'</table></div><p class="sm">เบี้ย PA เป็นอัตราอายุฐานตามเอกสาร ไม่ปรับตามอายุและไม่ขึ้นกับทุนที่กรอกด้านบน</p>':'<div class="empty">ไม่มีแผน PA ที่รับที่อายุนี้</div>')}
+ $('pcPA').innerHTML=(one&&!one.pa)?'':'<h3>แผน PA ที่รับที่อายุ '+age+' ปี</h3>'+(pa.length?'<div class="out tw"><table><tr><th>แผน</th><th>อายุรับ</th><th class="n">เบี้ย/ปี ขั้น 1</th><th class="n">เบี้ย/ปี ขั้น 2</th><th>ความคุ้มครองหลัก (AD/DD)</th></tr>'+pa.map(function(r){return'<tr><td><b>'+esc(r[0])+'</b></td><td>'+esc(r[2])+'</td><td class="n">'+esc(r[10])+'</td><td class="n">'+esc(r[11])+'</td><td>'+esc(r[4])+'</td></tr>'}).join('')+'</table></div><p class="sm">เบี้ย PA เป็นอัตราอายุฐานตามเอกสาร ไม่ปรับตามอายุและไม่ขึ้นกับทุนที่กรอกด้านบน</p>':'<div class="empty">ไม่มีแผน PA ที่รับที่อายุนี้</div>')}
+$('pPd').addEventListener('input',drawR);$('pPd').addEventListener('change',drawR);$('pPc').onclick=function(){$('pPd').value='';drawR();$('pPd').focus()};
 ['pAge','pSex','pSA','pMd'].forEach(function(i){$(i).addEventListener('input',drawR);$(i).addEventListener('change',drawR)});
 function parse(t){var M={},F={},n=0;t.split(/\r?\n/).forEach(function(l){l=l.trim();if(!l)return;var p=/[\t ;]/.test(l)?l.split(/[\t ;]+/):l.split(',');p=p.map(function(x){return parseFloat(String(x).replace(/,/g,''))});if(isNaN(p[0])||isNaN(p[1]))return;var a=Math.round(p[0]);M[a]=p[1];F[a]=(p.length>=3&&!isNaN(p[2]))?p[2]:p[1];n++});return{M:M,F:F,n:n}}
 function toText(e){var ks=Object.keys(e.M).map(Number).sort(function(a,b){return a-b});return ks.map(function(a){return a+' '+e.M[a]+' '+(e.F[a]!=null?e.F[a]:e.M[a])}).join('\n')}
