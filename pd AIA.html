@@ -149,6 +149,25 @@ html #dm.sw.dk{background:var(--ac);box-shadow:none}
 #dm.sw .kn .mo{opacity:0;transform:rotate(-40deg) scale(.5)}
 #dm.sw.dk .kn .su{opacity:0;transform:rotate(60deg) scale(.5)}
 #dm.sw.dk .kn .mo{opacity:1;transform:none}
+
+/* แถบกรอง + สลับการ์ด/ตาราง */
+.tools2{display:flex;flex-direction:column;gap:2px;margin:10px 0 6px}
+.tools2 #chips{flex:none;width:auto;margin:0 -6px;-webkit-mask-image:linear-gradient(90deg,#000 calc(100% - 26px),transparent);mask-image:linear-gradient(90deg,#000 calc(100% - 26px),transparent)}
+.tbar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:0 2px 8px}
+#cnt{font-size:13px;color:var(--mu)}
+.seg{display:inline-flex;padding:3px;gap:2px;border-radius:14px;background:color-mix(in srgb,var(--mu) 18%,transparent);flex:none}
+.seg button{display:inline-flex;align-items:center;gap:6px;border:0;background:transparent;color:var(--mu);font:inherit;font-size:13.5px;font-weight:600;padding:7px 14px;border-radius:11px;cursor:pointer;white-space:nowrap;transition:background .25s,color .25s,box-shadow .25s}
+.seg button svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.seg button.on{background:var(--ac);color:#fff;box-shadow:0 2px 8px color-mix(in srgb,var(--ac) 45%,transparent)}
+@media(min-width:760px){.tools2{flex-direction:row;align-items:center;gap:16px}.tools2 #chips{flex:1;-webkit-mask-image:none;mask-image:none}.tbar{padding:0 0 6px}}
+@media(max-width:700px){
+.tv table{min-width:640px;font-size:13px}
+.tv th,.tv td{padding:8px 9px}
+.tv td:nth-child(2){min-width:132px;max-width:132px;box-shadow:6px 0 8px -6px var(--sh2)}
+.tv td:first-child label,.tv td:first-child span{font-size:12px}
+}
+
+.tv td:nth-child(3){min-width:96px}.tv td:nth-child(4){min-width:110px}.tv td:nth-child(5){min-width:84px}.tv td:nth-child(6){min-width:210px}.tv td:nth-child(7){min-width:130px}.tv td:nth-child(8){min-width:240px}
 </style></head><body><div class="w">
 <header><h1>product - <span>SWS56_arm</span></h1>
 <p class="sub">แบบประกันหลัก · สัญญาเพิ่มเติม · แผน PA · ข้อควรรู้</p></header>
@@ -160,7 +179,7 @@ html #dm.sw.dk{background:var(--ac);box-shadow:none}
 <div id="nr" class="empty" hidden>ไม่พบรายการที่ตรงกับคำค้น</div>
 
 <section id="main"><h2>แบบประกันหลัก</h2>
-<div class="tools" style="align-items:center;flex-wrap:nowrap"><div id="chips"></div><div class="vs"><button class="chip on" data-vw="c">การ์ด</button><button class="chip" data-vw="t">ตาราง</button></div><span id="gl" hidden></span></div>
+<div class="tools2"><div id="chips"></div><div class="tbar"><span id="cnt" aria-live="polite"></span><div class="seg" role="group" aria-label="รูปแบบการแสดงผล"><button class="on" data-vw="c"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="2"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="2"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="2"/></svg>การ์ด</button><button data-vw="t"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 10h18M3 15h18M9.5 10v10"/></svg>ตาราง</button></div></div><span id="gl" hidden></span></div>
 <div class="grid" id="mainGrid"></div></section>
 
 <section id="rider"><h2>สัญญาเพิ่มเติม (Riders)</h2>
@@ -314,4 +333,8 @@ document.getElementById('rider').before(document.getElementById('exam'));
 var up=document.getElementById('up');up.onclick=function(){scrollTo({top:0,behavior:'smooth'})};
 addEventListener('scroll',function(){up.classList.toggle('show',scrollY>700)},{passive:true});
 drawCmp();drawAll();
+
+function updCnt(){var g=document.getElementById('mainGrid'),n=g.classList.contains('tv')?Math.max(0,g.querySelectorAll('tr').length-1):g.querySelectorAll('article').length;document.getElementById('cnt').textContent='แสดง '+n+' แบบ'}
+var _dm=drawMain;drawMain=function(){_dm.apply(this,arguments);updCnt()};
+updCnt();
 </script></body></html>
